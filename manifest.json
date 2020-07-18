@@ -1,0 +1,15 @@
+{
+    "manifest_version": 2,
+    "name": "TelemeterStats",
+    "version": "0.1",
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*.telenet.be/nl/business/klantenservice/raadpleeg-uw-internetverbruik*",
+                "https://*.telenet.be/fr/business/serviceclient/consultez-votre-consommation*"
+            ],
+            "js": ["content.js"],
+            "run_at": "document_idle"
+        }
+    ]
+}
