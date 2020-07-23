@@ -44,28 +44,25 @@ function addStats() {
 
 
     // Display new stats
-    var currentPeriod = document.evaluate("//*[@class='currentPeriod']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    const currentPeriod = document.evaluate("//*[@class='currentPeriod']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
     
     var totalUsage = document.evaluate("//*[@class='currentusage']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
     totalUsage.setAttribute("style", "margin:12px");    // extra styling :)
-    var span = document.evaluate("//*[@class='currentusage']/span", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    const span = document.evaluate("//*[@class='currentusage']/span", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
     // Get language preference
-    var language = document.evaluate("//*[@class='lang-selected']/span", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
+    const language = document.evaluate("//*[@class='lang-selected']/span", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
     
-    if (language == "nl") {
-        displayStat(totalUsage, span, "Dag", daysUsage + " / " + (daysUsage + remainingDays));
-        displayStat(totalUsage, span, "Piekuren", Math.round(peakUsage) + " GB / " + Math.round(daysUsage * 25) + " GB");
-    } else {
-        displayStat(totalUsage, span, "Jour", daysUsage + " / " + (daysUsage + remainingDays));
-        displayStat(totalUsage, span, "Heures pleines", Math.round(peakUsage) + " GB / " + Math.round(daysUsage * 25) + " GB");
-    }
+    const totalDays = daysUsage + remainingDays - 1;
+    const peakHoursLimit = daysUsage * (750 / totalDays);
+    displayStat(totalUsage, span, (language == "nl" ? "Dag" : "Jour"), daysUsage + " / " + totalDays);
+    displayStat(totalUsage, span, (language == "nl" ? "Piekuren" : "Heures pleines"), Math.round(peakUsage) + " GB / " + Math.round(peakHoursLimit) + " GB");
 
 }
 
 // Wait until the statistics are loaded
 var checkExist = setInterval(function() {
-   if (document.getElementsByClassName("currentusage").length) {
+   if (document.getElementsByClassName("nv-groups").length) {
         clearInterval(checkExist);
         addStats();
    }
